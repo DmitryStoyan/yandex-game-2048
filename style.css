@@ -1,0 +1,315 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: calc(100vw / 1920 * 10);
+}
+
+.buttons__wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4rem;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #faf8ef;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: calc(100vw / 768 * 10);
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: calc(100vw / 500 * 10);
+  }
+}
+
+@media (max-width: 500px) {
+  html {
+    font-size: calc(100vw / 375 * 10);
+  }
+}
+
+.all__elements__container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 3rem 0;
+}
+
+.game__container {
+  text-align: center;
+}
+
+.score__container {
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.menu__button-field {
+  width: 3.5rem;
+  padding: 10rem;
+  color: black;
+  background-repeat: no-repeat;
+  font-size: 2.5rem;
+  height: 3.5rem;
+}
+
+.grid__container {
+  display: grid;
+  grid-template-columns: repeat(4, 10rem);
+  gap: 1rem;
+  background-color: #444a64;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.grid-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #cdc1b4; */
+  background-color: #5e687f;
+  color: #776e65;
+  border-radius: 0.5rem;
+  animation: appear 500ms ease-in-out;
+  font-size: 2.5rem;
+}
+
+.grid-cell-2 {
+  background-color: #c8bfde;
+}
+
+.grid-cell-4 {
+  /* background-color: #ede0c8; */
+  background-color: #9c8cbd;
+  color: #f9f6f2;
+}
+
+.grid-cell-8 {
+  /* background-color: #f2b179; */
+  background-color: #77abda;
+  color: #f9f6f2;
+}
+
+.grid-cell-16 {
+  /* background-color: #f59563; */
+  color: #f9f6f2;
+  background-color: #2185c1;
+}
+
+.grid-cell-32 {
+  /* background-color: #f67c5f; */
+  background-color: #80cdef;
+  color: #f9f6f2;
+}
+
+.grid-cell-64 {
+  /* background-color: #f65e3b; */
+  background-color: #38b8e7;
+}
+
+.grid-cell-128 {
+  /* background-color: #edcf72; */
+  background-color: #715c9f;
+  color: #f9f6f2;
+}
+
+.grid-cell-256 {
+  /* background-color: #edcc61; */
+  background-color: #9567a0;
+
+  color: #f9f6f2;
+}
+
+.grid-cell-512 {
+  /* background-color: #edc850; */
+  background-color: #4a318c;
+  color: #f9f6f2;
+}
+
+.grid-cell-1024 {
+  background-color: #440d30;
+  color: #f9f6f2;
+}
+
+.grid-cell-2048 {
+  background-color: #2d176f;
+  color: #f9f6f2;
+}
+
+.grid-cell-super {
+  background-color: #3c3a32;
+  color: #f9f6f2;
+}
+
+.game__container-win {
+  display: flex;
+  width: 10rem;
+  height: 10rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  border-radius: 1.9rem;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+
+  visibility: hidden;
+}
+
+button {
+  color: white;
+  background-color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.game__container-win__active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.achivments {
+  background-image: url(images/achievements.svg);
+  background-size: 10rem 10rem;
+  background-color: blueviolet;
+  height: 10rem;
+  width: 10rem;
+}
+
+.records {
+  background-image: url(images/records.svg);
+  background-size: 10rem 10rem;
+  background-repeat: no-repeat;
+  background-color: red;
+  height: 10rem;
+  width: 10rem;
+}
+
+.close {
+  background-image: url(images/close.svg);
+  height: 5rem;
+  width: 5rem;
+  background-color: transparent;
+}
+
+.menu-button {
+  background-image: url(images/home-button.svg);
+  width: 5rem;
+  height: 5rem;
+  background-size: 5rem 5rem;
+  background-color: transparent;
+}
+
+.return_button {
+  background-image: url(images/revert-button.svg);
+  width: 5rem;
+  height: 5rem;
+  background-size: 5rem 5rem;
+  background-color: transparent;
+}
+
+@keyframes appear {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0) translateY(0);
+  }
+  100% {
+    transform: translateX(var(--moveX, 0)) translateY(var(--moveY, 0));
+  }
+}
+
+.grid-cell.moving {
+  animation: move 500ms ease-in-out;
+  --moveX: 0;
+  --moveY: 0;
+}
+
+.menu__button-wrapper {
+  /* grid-column: 1 / -1; */
+  /* width: 100%;
+  display: flex;
+  position: relative; */
+  /* justify-content: space-around; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.menu {
+  display: flex;
+  /* background-color: #ffde85; */
+  background-color: #440d30;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  justify-content: center;
+  /* opacity: 0;
+  visibility: hidden; */
+}
+
+.visibility-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.menu-wrapper {
+  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.field5x5 {
+  background-image: url(images/5x5.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field6x6 {
+  background-image: url(images/6x6.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field8x8 {
+  background-image: url(images/8x8.png);
+  background-position: center;
+  background-size: cover;
+}
+
+.field4x4 {
+  background-image: url(images/4x4.png);
+  background-position: center;
+  background-size: cover;
+}
