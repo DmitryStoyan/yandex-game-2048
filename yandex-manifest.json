@@ -1,0 +1,20 @@
+{
+  "name": "Бонусы 2048",
+  "description": "Популярная игра-головоломка 2048",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "icons": {
+    "192": "icon-192.png",
+    "512": "icon-512.png"
+  },
+  "splash_screen": {
+    "thumbnail": "splash-thumbnail.png",
+    "full_screen": "splash-full.png"
+  },
+  "categories": ["logic", "puzzle"],
+  "locales": ["ru", "en", "tr"],
+  "permissions": {
+    "leaderboard": true,
+    "storage": true
+  }
+}

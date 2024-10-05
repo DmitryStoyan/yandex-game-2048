@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Бонусы 2048</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="game-container">
+      <div class="header">
+        <h1>Бонусы 2048</h1>
+        <button class="btn-undo" id="undo-btn"></button>
+        <div class="score-container">
+          <div class="score-box">
+            <div class="score-title">СЧЕТ</div>
+            <div id="score" class="score-value">0</div>
+          </div>
+          <div class="score-box">
+            <div class="best-score-title">РЕКОРД</div>
+            <div id="best-score" class="score-value">0</div>
+          </div>
+        </div>
+      </div>
+      <div id="game-board">
+        <div class="grid"></div>
+      </div>
+      <button id="new-game-btn">Новая игра</button>
+      <p class="game-explanation">
+        Используйте стрелки или свайпы, чтобы двигать плитки. Когда две плитки с
+        одинаковым числом соприкасаются, они сливаются в одну!
+      </p>
+    </div>
+    <script src="https://yandex.ru/games/sdk/v2"></script>
+    <script src="game.js"></script>
+  </body>
+</html>
