@@ -19,7 +19,7 @@ const translations = {
     gameOver: "Game Over! Your score: ",
     gameExplanation:
       "Use arrow keys or swipe to move tiles! ________________________________________________",
-    gameName: "Super 2048",
+    gameName: "2048: Multiply and Explode",
   },
   ru: {
     newGame: "Новая игра",
@@ -28,7 +28,7 @@ const translations = {
     gameOver: "Игра окончена! Ваш счет: ",
     gameExplanation:
       "Используйте стрелки или свайпы, чтобы двигать плитки! ________________________________________________",
-    gameName: "Бонусы 2048",
+    gameName: "2048: Умножай и Взрывай",
   },
   tr: {
     newGame: "Yeni Oyun",
@@ -37,7 +37,25 @@ const translations = {
     gameOver: "Oyun bitti! Skorunuz: ",
     gameExplanation:
       "Taşları hareket ettirmek için okları veya kaydırmaları kullanın! ________________________________________________",
-    gameName: "Super 2048",
+    gameName: "2048: Çarp ve Patlat",
+  },
+  de: {
+    newGame: "Neues Spiel",
+    score: "PUNKTZAHL",
+    best: "BESTE",
+    gameOver: "Spiel beendet! Ihr Punktestand: ",
+    gameExplanation:
+      "Verwenden Sie die Pfeiltasten oder wischen Sie, um die Fliesen zu bewegen! ________________________________________________",
+    gameName: "2048: Multiplizieren und Explodieren",
+  },
+  es: {
+    newGame: "Nuevo Juego",
+    score: "PUNTUACIÓN",
+    best: "MEJOR",
+    gameOver: "¡Juego Terminado! Tu puntuación: ",
+    gameExplanation:
+      "¡Usa las teclas de flecha o desliza para mover las fichas! ________________________________________________",
+    gameName: "2048: Multiplica y Explota",
   },
 };
 
