@@ -1,3 +1,8 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   --tile-size: 100px;
 }
@@ -13,7 +18,7 @@ body {
 
 body {
   font-family: "Arial", sans-serif;
-  background: linear-gradient(to bottom right, #faf8ef, #eee4da);
+  background: #222;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,11 +46,12 @@ body {
 }
 
 h1 {
-  font-size: 36px;
-  font-weight: bold;
-  color: #776e65;
-  margin: 0;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  font-size: 0.1px;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  z-index: -10;
 }
 
 .btn-undo {
@@ -67,7 +73,7 @@ h1 {
 }
 
 .score-box {
-  background-color: #8f7a66;
+  background-color: #574c42;
   border-radius: 5px;
   padding: 10px 15px;
   text-align: center;
@@ -88,10 +94,18 @@ h1 {
   font-weight: bold;
 }
 
+.undo-btn__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 9px;
+}
+
 #game-board {
   width: 100%;
   aspect-ratio: 1 / 1;
-  background-color: #bbada0;
+  background-color: #333;
   border-radius: 8px;
   padding: 15px;
   position: relative;
@@ -108,7 +122,7 @@ h1 {
 }
 
 .tile {
-  background-color: #eee4da;
+  background-color: #444444;
   border-radius: 5px;
   display: flex;
   justify-content: center;
@@ -121,49 +135,49 @@ h1 {
 }
 
 .tile-2 {
-  background-color: #eee4da;
+  background-color: #f6e6db;
 }
 .tile-4 {
-  background-color: #ede0c8;
+  background-color: #edcdb6;
 }
 .tile-8 {
-  background-color: #f2b179;
+  background-color: #e4b391;
   color: #f9f6f2;
 }
 .tile-16 {
-  background-color: #f59563;
+  background-color: #db9b6d;
   color: #f9f6f2;
 }
 .tile-32 {
-  background-color: #f67c5f;
+  background-color: #d28147;
   color: #f9f6f2;
 }
 .tile-64 {
-  background-color: #f65e3b;
+  background-color: #bb692f;
   color: #f9f6f2;
 }
 .tile-128 {
-  background-color: #edcf72;
+  background-color: #975526;
   color: #f9f6f2;
   font-size: 28px;
 }
 .tile-256 {
-  background-color: #edcc61;
+  background-color: #71401d;
   color: #f9f6f2;
   font-size: 28px;
 }
 .tile-512 {
-  background-color: #edc850;
+  background-color: #5b2a12;
   color: #f9f6f2;
   font-size: 24px;
 }
 .tile-1024 {
-  background-color: #edc53f;
+  background-color: #481e10;
   color: #f9f6f2;
   font-size: 20px;
 }
 .tile-2048 {
-  background-color: #edc22e;
+  background-color: #3c1712;
   color: #f9f6f2;
   font-size: 20px;
 }
@@ -181,7 +195,7 @@ h1 {
 }
 
 #new-game-btn {
-  background-color: #8f7a66;
+  background-color: #574c42;
   color: white;
   border: none;
   border-radius: 5px;
@@ -266,3 +280,22 @@ h1 {
     display: none;
   }
 }
+
+/* background-color: #333333; Цвет фона */
+
+/* background-color: #444444; Цвет фона пустой плитки*/
+
+/* background-color: #f6e6db; 2*/
+/* background-color: #edcdb6; 4*/
+/* background-color: #e4b391; 8*/
+/* background-color: #db9b6d; 16*/
+/* background-color: #d28147; 32*/
+/* background-color: #bb692f; 64*/
+/* background-color: #975526; 128*/
+/* background-color: #71401d; 256*/
+/* background-color: #5b2a12; 512 */
+/* background-color: #481e10; 1024 */
+/* background-color: #3c1712; 2048 */
+/* background-color: #a06037; 4096 */
+/* background-color: #a0522d; 8192 */
+/* background-color: #a03f2a; 16384 */

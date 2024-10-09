@@ -206,9 +206,25 @@ function initGame(ysdk) {
 
   updateLanguage();
 
-  document
-    .getElementById("new-game-btn")
-    .addEventListener("click", restartGame);
+  document.getElementById("new-game-btn").addEventListener("click", () => {
+    ysdk.adv.showFullscreenAdv({
+      callbacks: {
+        onOpen: function () {
+          ysdk.features.GameplayAPI.stop();
+        },
+        onClose: function () {
+          // Действие после закрытия рекламы.
+          ysdk.features.GameplayAPI.start();
+          restartGame();
+        },
+        onError: function (error) {
+          // Действие в случае ошибки.
+          restartGame();
+          console.log(error);
+        },
+      },
+    });
+  });
   setupSwipeListeners();
 
   document.body.addEventListener(
@@ -303,16 +319,20 @@ function showRewardedVideo() {
     window.ysdk.adv.showRewardedVideo({
       callbacks: {
         onOpen: () => {
+          ysdk.features.GameplayAPI.stop();
           console.log("Видеореклама открыта.");
         },
         onRewarded: () => {
+          ysdk.features.GameplayAPI.start();
           console.log("Просмотр засчитан! Отмена хода.");
           undoMove(); // Отменить ход после успешного просмотра рекламы
         },
         onClose: () => {
+          ysdk.features.GameplayAPI.start();
           console.log("Видеореклама закрыта.");
         },
         onError: (e) => {
+          ysdk.features.GameplayAPI.start();
           console.log("Ошибка при показе видеорекламы:", e);
         },
       },
@@ -354,11 +374,28 @@ function move(direction) {
     let mergedIndices = new Set();
     for (let j = 0; j < row.length - 1; j++) {
       if (!mergedIndices.has(j)) {
-        // Если обе плитки множители "M", не соединять их
-        if (row[j] === "M" && row[j + 1] === "M") {
-          continue; // Пропустить объединение
+        // Check for bomb merging logic
+        if (row[j] === "B" || row[j + 1] === "B") {
+          // If one of the tiles is a bomb
+          if (row[j] === "B") {
+            // If the current tile is a bomb, remove it and the other tile
+            row.splice(j, 1); // Remove the bomb
+            row.splice(j, 1); // Remove the other tile
+            mergeOccurred = true;
+            moved = true;
+            j--; // Check this position again
+            continue; // Skip to the next iteration
+          } else {
+            // If the next tile is a bomb
+            row.splice(j + 1, 1); // Remove the bomb
+            row[j] = 0; // Set the current tile to 0
+            mergeOccurred = true;
+            moved = true;
+            continue; // Skip to the next iteration
+          }
         }
 
+        // Regular merging logic
         if (row[j] === row[j + 1] || row[j] === "M" || row[j + 1] === "M") {
           if (row[j] === "M" || row[j + 1] === "M") {
             row[j] = (row[j] === "M" ? row[j + 1] : row[j]) * 2;
@@ -394,7 +431,7 @@ function move(direction) {
   }
 
   if (moved) {
-    saveHistory(); // Сохранить текущее состояние перед ходом
+    saveHistory(); // Save the current state before the move
     board = newBoard;
     addNewTile();
     updateBoard();
@@ -445,6 +482,17 @@ function startNewGame() {
   addNewTile();
   addNewTile();
   updateScore(0);
+
+  // Начало игровой сессии
+  if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
+    window.ysdk.features.GameplayAPI.start()
+      .then(() => {
+        console.log("Gameplay session started");
+      })
+      .catch((error) => {
+        console.error("Error starting gameplay session:", error);
+      });
+  }
 }
 
 function restartGame() {
@@ -476,6 +524,18 @@ function isGameOver() {
       }
     }
   }
+
+  // Если игра завершена, останавливаем игровую сессию
+  if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
+    window.ysdk.features.GameplayAPI.stop()
+      .then(() => {
+        console.log("Gameplay session stopped");
+      })
+      .catch((error) => {
+        console.error("Error stopping gameplay session:", error);
+      });
+  }
+
   return true;
 }
 
@@ -552,8 +612,20 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((ysdk) => {
         window.ysdk = ysdk;
         console.log("Yandex Games SDK initialized");
+
         initGame(ysdk);
-        ysdk.features.LoadingAPI.ready();
+
+        if (ysdk.features && ysdk.features.LoadingAPI) {
+          ysdk.features.LoadingAPI.ready()
+            .then(() => {
+              console.log("Loading API: Игра готова к старту");
+            })
+            .catch((error) => {
+              console.error("Ошибка при вызове LoadingAPI.ready():", error);
+            });
+        } else {
+          console.warn("Loading API не доступен");
+        }
       })
       .catch((error) => {
         console.error("Failed to initialize Yandex Games SDK:", error);
