@@ -69,7 +69,6 @@ const translations = {
   },
 };
 
-// Initialize audio context
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound(frequency, duration, type = "sine") {
@@ -93,15 +92,15 @@ function playSound(frequency, duration, type = "sine") {
 }
 
 function playMergeSound() {
-  playSound(440, 0.1); // A4 note
+  playSound(440, 0.1);
 }
 
 function playMoveSound() {
-  playSound(330, 0.05); // E4 note, shorter duration
+  playSound(330, 0.05);
 }
 
 function playGameOverSound() {
-  playSound(220, 0.3, "sawtooth"); // A3 note, longer duration, sawtooth wave
+  playSound(220, 0.3, "sawtooth");
 }
 
 function savePreviousState() {
@@ -203,7 +202,6 @@ function getNewTileType() {
 
 function initGame(ysdk) {
   if (ysdk) {
-    // Manually set the language based on Yandex SDK's detected language
     let detectedLang = ysdk.environment.i18n.lang;
     currentLanguage = translations.hasOwnProperty(detectedLang)
       ? detectedLang
@@ -219,19 +217,11 @@ function initGame(ysdk) {
   document.getElementById("new-game-btn").addEventListener("click", () => {
     ysdk.adv.showFullscreenAdv({
       callbacks: {
-        onOpen: function () {
-          ysdk.features.GameplayAPI.stop();
-          restartGame();
-          updateBoard();
-        },
         onClose: function () {
-          // Действие после закрытия рекламы.
-          ysdk.features.GameplayAPI.start();
           restartGame();
           updateBoard();
         },
         onError: function (error) {
-          // Действие в случае ошибки.
           restartGame();
           updateBoard();
           console.log(error);
@@ -250,32 +240,6 @@ function initGame(ysdk) {
   );
 
   loadGameState();
-
-  // Показ полноэкранной рекламы в начале игры
-  if (window.ysdk && window.ysdk.adv) {
-    window.ysdk.adv.showFullscreenAdv({
-      callbacks: {
-        onOpen: function () {
-          console.log("Полноэкранная реклама успешно показана.");
-        },
-        onClose: function (wasShown) {
-          if (wasShown) {
-            console.log("Реклама закрыта, она была показана.");
-          } else {
-            console.log("Реклама закрыта, но не была показана.");
-          }
-        },
-        onError: function (error) {
-          console.error("Ошибка при показе рекламы:", error);
-        },
-        onOffline: function () {
-          console.warn("Пользователь оффлайн, реклама не может быть показана.");
-        },
-      },
-    });
-  } else {
-    console.error("Yandex SDK или реклама недоступны.");
-  }
 }
 
 // Функция для сохранения текущего состояния в историю
@@ -303,13 +267,6 @@ function updateBoard() {
         } else if (board[i][j] === "B") {
           inner.textContent = "💣";
           tile.classList.add("tile-bomb");
-
-          // const img = document.createElement("img");
-          // img.src = "./images/tnt.png";
-          // img.alt = "Bomb";
-          // img.classList.add("bomb-image"); // Добавьте класс для настройки стиля через CSS
-          // inner.appendChild(img);
-          // tile.classList.add("tile-bomb");
         } else {
           inner.textContent = board[i][j];
         }
@@ -320,7 +277,7 @@ function updateBoard() {
   }
 }
 
-// Функция для отмены хода, используя историю
+// Функция для отмены хода
 function undoMove() {
   if (historyStack.length > 0) {
     const previousState = historyStack.pop(); // Извлекаем последнее состояние из стека
@@ -346,7 +303,7 @@ function showRewardedVideo() {
         onRewarded: () => {
           ysdk.features.GameplayAPI.start();
           console.log("Просмотр засчитан! Отмена хода.");
-          undoMove(); // Отменить ход после успешного просмотра рекламы
+          undoMove();
         },
         onClose: () => {
           ysdk.features.GameplayAPI.start();
@@ -363,10 +320,8 @@ function showRewardedVideo() {
   }
 }
 
-// обработчик на кнопку отмены хода
 document.getElementById("undo-btn").addEventListener("click", function () {
   if (historyStack.length > 0) {
-    // Показываем видеорекламу, перед отменой хода
     showRewardedVideo();
   } else {
     console.log("Нет ходов для отмены.");
@@ -401,10 +356,10 @@ function move(direction) {
 
         // Проверяем на плитки-бомбы или множители, чтобы они не соединялись
         if (
-          (currentTile === "B" && nextTile === "B") || // Две бомбы
-          (currentTile === "M" && nextTile === "M") || // Два множителя
-          (currentTile === "B" && nextTile === "M") || // Бомба и множитель
-          (currentTile === "M" && nextTile === "B") // Множитель и бомба
+          (currentTile === "B" && nextTile === "B") ||
+          (currentTile === "M" && nextTile === "M") ||
+          (currentTile === "B" && nextTile === "M") ||
+          (currentTile === "M" && nextTile === "B")
         ) {
           continue; // Эти плитки не должны соединяться
         }
@@ -471,7 +426,7 @@ function move(direction) {
   }
 
   if (moved) {
-    saveHistory(); // Сохраняем текущее состояние перед ходом
+    saveHistory();
     board = newBoard;
     addNewTile();
     updateBoard();
@@ -490,7 +445,7 @@ function move(direction) {
       if (window.ysdk) {
         window.ysdk
           .getLeaderboards()
-          .then((lb) => lb.setLeaderboardScore("2048_leaderboard", score));
+          .then((lb) => lb.setLeaderboardScore("leaderboard1", score));
       }
     }
   }
@@ -501,7 +456,7 @@ function move(direction) {
 function updateScore(increase) {
   if (typeof increase === "number" && !isNaN(increase)) {
     score += increase;
-    score = Math.max(0, score); // Ensure score is never negative
+    score = Math.max(0, score);
     document.getElementById("score").textContent = score;
     if (score > bestScore) {
       bestScore = score;
