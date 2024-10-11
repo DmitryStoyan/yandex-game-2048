@@ -20,6 +20,8 @@ const translations = {
     gameExplanation:
       "Use arrow keys or swipe to move tiles! ________________________________________________",
     gameName: "2048: Multiply and Explode",
+    btnUndoText1: "Cancel move",
+    btnUndoText2: "For viewing an advertisement",
   },
   ru: {
     newGame: "Новая игра",
@@ -29,6 +31,8 @@ const translations = {
     gameExplanation:
       "Используйте стрелки или свайпы, чтобы двигать плитки! ________________________________________________",
     gameName: "2048: Умножай и Взрывай",
+    btnUndoText1: "Отменить ход",
+    btnUndoText2: "За просмотр рекламы",
   },
   tr: {
     newGame: "Yeni Oyun",
@@ -38,6 +42,8 @@ const translations = {
     gameExplanation:
       "Taşları hareket ettirmek için okları veya kaydırmaları kullanın! ________________________________________________",
     gameName: "2048: Çarp ve Patlat",
+    btnUndoText1: "Taşımayı iptal et",
+    btnUndoText2: "Bir reklamı görüntülemek için",
   },
   de: {
     newGame: "Neues Spiel",
@@ -47,6 +53,8 @@ const translations = {
     gameExplanation:
       "Verwenden Sie die Pfeiltasten oder wischen Sie, um die Fliesen zu bewegen! ________________________________________________",
     gameName: "2048: Multiplizieren und Explodieren",
+    btnUndoText1: "Umzug abbrechen",
+    btnUndoText2: "Zum Anzeigen einer Anzeige",
   },
   es: {
     newGame: "Nuevo Juego",
@@ -56,6 +64,8 @@ const translations = {
     gameExplanation:
       "¡Usa las teclas de flecha o desliza para mover las fichas! ________________________________________________",
     gameName: "2048: Multiplica y Explota",
+    btnUndoText1: "Cancelar movimiento",
+    btnUndoText2: "Para ver un anuncio",
   },
 };
 
@@ -211,15 +221,19 @@ function initGame(ysdk) {
       callbacks: {
         onOpen: function () {
           ysdk.features.GameplayAPI.stop();
+          restartGame();
+          updateBoard();
         },
         onClose: function () {
           // Действие после закрытия рекламы.
           ysdk.features.GameplayAPI.start();
           restartGame();
+          updateBoard();
         },
         onError: function (error) {
           // Действие в случае ошибки.
           restartGame();
+          updateBoard();
           console.log(error);
         },
       },
@@ -289,6 +303,13 @@ function updateBoard() {
         } else if (board[i][j] === "B") {
           inner.textContent = "💣";
           tile.classList.add("tile-bomb");
+
+          // const img = document.createElement("img");
+          // img.src = "./images/tnt.png";
+          // img.alt = "Bomb";
+          // img.classList.add("bomb-image"); // Добавьте класс для настройки стиля через CSS
+          // inner.appendChild(img);
+          // tile.classList.add("tile-bomb");
         } else {
           inner.textContent = board[i][j];
         }
@@ -372,47 +393,65 @@ function move(direction) {
   for (let i = 0; i < GRID_SIZE; i++) {
     let row = newBoard[i].filter((cell) => cell !== 0);
     let mergedIndices = new Set();
+
     for (let j = 0; j < row.length - 1; j++) {
       if (!mergedIndices.has(j)) {
-        // Check for bomb merging logic
-        if (row[j] === "B" || row[j + 1] === "B") {
-          // If one of the tiles is a bomb
-          if (row[j] === "B") {
-            // If the current tile is a bomb, remove it and the other tile
-            row.splice(j, 1); // Remove the bomb
-            row.splice(j, 1); // Remove the other tile
-            mergeOccurred = true;
-            moved = true;
-            j--; // Check this position again
-            continue; // Skip to the next iteration
-          } else {
-            // If the next tile is a bomb
-            row.splice(j + 1, 1); // Remove the bomb
-            row[j] = 0; // Set the current tile to 0
-            mergeOccurred = true;
-            moved = true;
-            continue; // Skip to the next iteration
-          }
+        let currentTile = row[j];
+        let nextTile = row[j + 1];
+
+        // Проверяем на плитки-бомбы или множители, чтобы они не соединялись
+        if (
+          (currentTile === "B" && nextTile === "B") || // Две бомбы
+          (currentTile === "M" && nextTile === "M") || // Два множителя
+          (currentTile === "B" && nextTile === "M") || // Бомба и множитель
+          (currentTile === "M" && nextTile === "B") // Множитель и бомба
+        ) {
+          continue; // Эти плитки не должны соединяться
         }
 
-        // Regular merging logic
-        if (row[j] === row[j + 1] || row[j] === "M" || row[j + 1] === "M") {
-          if (row[j] === "M" || row[j + 1] === "M") {
-            row[j] = (row[j] === "M" ? row[j + 1] : row[j]) * 2;
+        // Логика взрыва бомб
+        if (currentTile === "B" || nextTile === "B") {
+          if (currentTile === "B") {
+            row.splice(j, 1); // Удаляем бомбу
+            row.splice(j, 1); // Удаляем следующую плитку
+            mergeOccurred = true;
+            moved = true;
+            j--; // Проверяем текущую позицию снова
           } else {
-            row[j] *= 2;
+            row.splice(j + 1, 1); // Удаляем бомбу
+            row[j] = 0; // Текущая плитка становится 0
+            mergeOccurred = true;
+            moved = true;
           }
+          continue;
+        }
 
+        // Логика слияния множителя
+        if (currentTile === "M" || nextTile === "M") {
+          row[j] = (currentTile === "M" ? nextTile : currentTile) * 2;
           updateScore(row[j]);
-          mergeOccurred = true;
-          row.splice(j + 1, 1);
+          row.splice(j + 1, 1); // Удаляем вторую плитку
           mergedIndices.add(j);
+          mergeOccurred = true;
           moved = true;
-          j--; // Check this position again
+          j--;
+          continue;
+        }
+
+        // Обычная логика слияния числовых плиток
+        if (currentTile === nextTile) {
+          row[j] *= 2;
+          updateScore(row[j]);
+          row.splice(j + 1, 1); // Удаляем вторую плитку
+          mergedIndices.add(j);
+          mergeOccurred = true;
+          moved = true;
+          j--;
         }
       }
     }
 
+    // Добавляем 0 в конец, если длина ряда изменилась
     while (row.length < GRID_SIZE) {
       row.push(0);
     }
@@ -423,6 +462,7 @@ function move(direction) {
     newBoard[i] = row;
   }
 
+  // Обратно разворачиваем доску, если необходимо
   if (direction === "ArrowRight" || direction === "ArrowDown") {
     newBoard = reverse(newBoard);
   }
@@ -431,19 +471,20 @@ function move(direction) {
   }
 
   if (moved) {
-    saveHistory(); // Save the current state before the move
+    saveHistory(); // Сохраняем текущее состояние перед ходом
     board = newBoard;
     addNewTile();
     updateBoard();
     saveGameState();
 
-    // Play sound effects after the move is completed
+    // Воспроизведение звуковых эффектов
     if (mergeOccurred) {
       playMergeSound();
     } else {
       playMoveSound();
     }
 
+    // Проверка окончания игры
     if (isGameOver()) {
       playGameOverSound();
       if (window.ysdk) {
@@ -482,6 +523,7 @@ function startNewGame() {
   addNewTile();
   addNewTile();
   updateScore(0);
+  updateBoard();
 
   // Начало игровой сессии
   if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
@@ -496,9 +538,9 @@ function startNewGame() {
 }
 
 function restartGame() {
+  updateBoard();
   startNewGame();
   updateScore(0);
-  updateBoard();
   saveGameState();
 }
 
@@ -597,6 +639,10 @@ function updateLanguage() {
   document.title = translations[currentLanguage].gameName;
   document.querySelector("h1").textContent =
     translations[currentLanguage].gameName;
+  document.querySelector(".btn-undo-text1").textContent =
+    translations[currentLanguage].btnUndoText1;
+  document.querySelector(".btn-undo-text2").textContent =
+    translations[currentLanguage].btnUndoText2;
 }
 
 document.addEventListener("keydown", (e) => {
