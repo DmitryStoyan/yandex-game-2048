@@ -1,6 +1,13 @@
 * {
   margin: 0;
   padding: 0;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 :root {
@@ -218,12 +225,6 @@ h1 {
   font-size: 16px;
   line-height: 1.5;
   margin-top: 20px;
-}
-
-.bomb-image {
-  width: 100%; /* Подогнать под размер плитки */
-  height: 100%; /* Подогнать под размер плитки */
-  object-fit: contain; /* Сохранить пропорции картинки */
 }
 
 @media (max-width: 500px), (max-height: 700px) {
