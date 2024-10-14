@@ -4,7 +4,7 @@ let bestScore = 0;
 let currentLanguage;
 let previousBoard;
 let previousScore;
-let historyStack = []; // История ходов
+let historyStack = [];
 
 const GRID_SIZE = 4;
 const CELL_COUNT = GRID_SIZE * GRID_SIZE;
@@ -109,7 +109,7 @@ function savePreviousState() {
 }
 
 function loadGameState() {
-  if (window.ysdk) {
+  if (window.ysdk && window.ysdk.getPlayer) {
     window.ysdk
       .getPlayer({ scopes: false })
       .then((player) => {
@@ -134,6 +134,7 @@ function loadGameState() {
         startNewGame();
       });
   } else {
+    console.warn("Yandex Games SDK is not available or not fully initialized.");
     const savedState = localStorage.getItem("gameState");
     if (savedState) {
       const gameState = JSON.parse(savedState);
@@ -617,13 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
         initGame(ysdk);
 
         if (ysdk.features && ysdk.features.LoadingAPI) {
-          ysdk.features.LoadingAPI.ready()
-            .then(() => {
-              console.log("Loading API: Игра готова к старту");
-            })
-            .catch((error) => {
-              console.error("Ошибка при вызове LoadingAPI.ready():", error);
-            });
+          ysdk.features.LoadingAPI.ready();
         } else {
           console.warn("Loading API не доступен");
         }
